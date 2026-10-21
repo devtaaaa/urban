@@ -47,7 +47,7 @@ Keep it natural and approximately 30–70 words.
 Return ONLY the review text.`
 
                 const userPrompt = `Business:
-MEGHAM Restaurant
+Urban Theka Cafe
 Haridwar, Uttarakhand
 
 Customer answers:

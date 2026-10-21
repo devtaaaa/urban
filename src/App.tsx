@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Loader2, Star, CheckCircle2, Copy, ExternalLink, MapPin, ChefHat } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 
-const GOOGLE_REVIEW_URL = 'https://g.page/r/CVTdiL14ejNdEAE/review';
+const GOOGLE_REVIEW_URL = 'https://g.page/r/Ca4EV6GGvOCXEBM/review';
 
 type FormState = {
   food: string;
@@ -27,6 +27,8 @@ function App() {
   const [copied, setCopied] = useState(false);
   const [clipboardError, setClipboardError] = useState(false);
   const [showQR, setShowQR] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [submitted, setSubmitted] = useState(false);
 
   // Parse query params to allow showing QR
   useEffect(() => {
@@ -73,6 +75,12 @@ function App() {
       if (data.error) throw new Error(data.error);
 
       setReview(data.review);
+      if (rating >= 4) {
+        setSubmitted(true);
+      } else {
+        alert('Your review has been submitted okay?');
+      }
+      if (rating < 4) { alert('Your review has been submitted okay?'); }
       
       // Attempt copy
       try {
@@ -104,7 +112,7 @@ function App() {
       <div className="min-h-screen bg-neutral-50 flex flex-col items-center justify-center p-6">
         <div className="bg-white p-8 rounded-3xl shadow-xl max-w-md w-full flex flex-col items-center text-center">
           <ChefHat className="w-12 h-12 text-amber-600 mb-4" />
-          <h1 className="text-2xl font-bold text-neutral-900 mb-2">MEGHAM QR Code</h1>
+          <h1 className="text-2xl font-bold text-neutral-900 mb-2">Urban Theka QR Code</h1>
           <p className="text-neutral-500 mb-8">Scan to share your experience</p>
           
           <div className="bg-white p-4 rounded-xl border border-neutral-100 shadow-sm mb-8">
@@ -137,7 +145,7 @@ function App() {
           <div className="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center mb-3">
             <ChefHat className="w-6 h-6 text-amber-600" />
           </div>
-          <h1 className="text-xl font-bold tracking-tight">MEGHAM</h1>
+          <h1 className="text-xl font-bold tracking-tight">Urban Theka</h1>
           <div className="flex items-center text-sm text-neutral-500 mt-1">
             <MapPin className="w-3.5 h-3.5 mr-1" />
             Restaurant &bull; Haridwar
@@ -172,11 +180,7 @@ function App() {
             </div>
 
             <div className="bg-white p-6 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] mb-8 border border-neutral-100 relative">
-              <div className="absolute -top-3 left-6">
-                <div className="flex gap-1 bg-white px-2">
-                  {[1,2,3,4,5].map(i => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}
-                </div>
-              </div>
+
               <p className="text-neutral-700 text-lg leading-relaxed pt-2">"{review}"</p>
             </div>
 
@@ -185,14 +189,7 @@ function App() {
                 {copied ? "Paste it on Google and share your experience." : "Copy the text above and share it on Google."}
               </p>
               
-              <a 
-                href={GOOGLE_REVIEW_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full bg-blue-600 text-white font-semibold text-lg py-4 px-6 rounded-2xl flex items-center justify-center gap-2 hover:bg-blue-700 active:scale-[0.98] transition-all shadow-lg shadow-blue-600/20"
-              >
-                GO TO GOOGLE REVIEWS <ExternalLink className="w-5 h-5" />
-              </a>
+
 
               <button 
                 onClick={handleManualCopy}
@@ -200,6 +197,12 @@ function App() {
               >
                 {copied ? '✓ COPIED' : 'COPY REVIEW'} <Copy className="w-5 h-5" />
               </button>
+<button
+  onClick={() => window.open('https://g.page/r/Ca4EV6GGvOCXEBM/review', '_blank')}
+  className="w-full bg-blue-600 text-white font-semibold text-lg py-4 px-6 rounded-2xl flex items-center justify-center gap-2 hover:bg-blue-700 active:scale-[0.98] transition-all shadow-lg shadow-blue-600/20"
+>
+  GO TO GOOGLE REVIEWS <ExternalLink className="w-5 h-5" />
+</button>
               
               <button 
                 onClick={() => {
@@ -283,7 +286,7 @@ function App() {
                 <input
                   type="text"
                   maxLength={100}
-                  placeholder="e.g. Gulab Jamun Tiramisu"
+                  placeholder="coffee"
                   value={form.customText}
                   onChange={(e) => handleSelect('customText', e.target.value)}
                   className="w-full p-4 rounded-2xl border-2 border-neutral-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition-all text-lg"
@@ -335,6 +338,22 @@ function App() {
                   ))}
                 </div>
               </section>
+                {/* Question 6 */}
+                <section>
+                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded-full bg-amber-100 text-amber-700 text-sm flex items-center justify-center">6</span>
+                    How much would you rate?
+                  </h3>
+                  <div className="flex gap-1">
+                    {[1,2,3,4,5].map(i => (
+                      <Star
+                        key={i}
+                        className={`w-8 h-8 cursor-pointer ${i <= rating ? 'fill-amber-400 text-amber-400' : 'text-neutral-300'}`}
+                        onClick={() => setRating(i)}
+                      />
+                    ))}
+                  </div>
+                </section>
             </div>
 
             <div className="mt-12 mb-12">
