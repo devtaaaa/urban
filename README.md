@@ -83,3 +83,4 @@ Scan or save this QR code and print it for your restaurant tables!
 - The Groq API key is never exposed to the browser.
 - The `POST /api/generate-review` endpoint securely proxies the request to Groq.
 - The user must manually paste and submit the review on Google (no automated submission or DOM manipulation is attempted, respecting Google's terms of service).
+# Urban-theka-review
