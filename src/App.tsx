@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Loader2, Star, CheckCircle2, Copy, ExternalLink, MapPin, ChefHat } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 
-const GOOGLE_REVIEW_URL = 'https://g.page/r/Ca4EV6GGvOCXEBM/review';
+// GOOGLE_REVIEW_URL removed (unused)
 
 type FormState = {
   food: string;
@@ -28,7 +28,7 @@ function App() {
   const [clipboardError, setClipboardError] = useState(false);
   const [showQR, setShowQR] = useState(false);
   const [rating, setRating] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
+  // const [submitted, setSubmitted] = useState(false); // removed (unused)
 
   // Parse query params to allow showing QR
   useEffect(() => {
@@ -76,7 +76,7 @@ function App() {
 
       setReview(data.review);
       if (rating >= 4) {
-        setSubmitted(true);
+        // setSubmitted(true); // removed (unused)
       } else {
         alert('Your review has been submitted okay?');
       }
