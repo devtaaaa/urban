@@ -17,3 +17,4 @@ wrangler-*.toml
 Thumbs.db
 .idea/
 *.log
+*.zip
