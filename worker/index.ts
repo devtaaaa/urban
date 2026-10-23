@@ -2,8 +2,8 @@ import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 
 type Bindings = {
-  GROQ_API_KEY: string
-  GROQ_MODEL?: string
+  OPENROUTER_API_KEY: string
+  OPENROUTER_MODEL?: string
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
@@ -20,13 +20,13 @@ app.post('/api/generate-review', async (c) => {
       return c.json({ error: 'Missing required fields' }, 400)
     }
 
-    const apiKey = c.env.GROQ_API_KEY
+    const apiKey = c.env.OPENROUTER_API_KEY
     if (!apiKey) {
       return c.json({ error: 'Server misconfiguration: Missing API key' }, 500)
     }
 
-    const model = c.env.GROQ_MODEL || 'openai/gpt-oss-20b'
-    const url = 'https://api.groq.com/openai/v1/chat/completions'
+    const model = c.env.OPENROUTER_MODEL || 'openai/gpt-oss-20b'
+    const url = 'https://openrouter.ai/api/v1/chat/completions'
 
     const systemPrompt = `You are a review-writing assistant.
 
@@ -50,7 +50,7 @@ Specifics: ${customText || 'None provided'}
 Service: ${service}
 Recommend: ${recommend}`
 
-    console.log('[Review API] Calling Groq')
+    console.log('[Review API] Calling OpenRouter')
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -68,11 +68,11 @@ Recommend: ${recommend}`
       })
     })
     
-    console.log(`[Review API] Groq status: ${response.status}`)
+    console.log(`[Review API] OpenRouter status: ${response.status}`)
 
     if (!response.ok) {
       const errText = await response.text()
-      console.error('Groq API Error:', errText)
+      console.error('OpenRouter API Error:', errText)
       return c.json({ error: 'Failed to generate review' }, 502)
     }
 

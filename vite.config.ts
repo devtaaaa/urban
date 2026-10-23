@@ -11,7 +11,7 @@ export default defineConfig(({ mode }) => {
       react(), 
       tailwindcss(),
       {
-        name: 'groq-api-mock',
+        name: 'openrouter-api-proxy',
         configureServer(server) {
           server.middlewares.use('/api/generate-review', async (req, res, next) => {
             if (req.method !== 'POST') return next()
@@ -25,15 +25,15 @@ export default defineConfig(({ mode }) => {
                 const { food, enjoyedMost, customText, service, recommend } = body
 
                 console.log('[Review API] Request received')
-                const apiKey = env.GROQ_API_KEY
+                const apiKey = env.OPENROUTER_API_KEY
                 if (!apiKey) {
                   res.statusCode = 500
                   res.end(JSON.stringify({ error: 'Server misconfiguration: Missing API key' }))
                   return
                 }
 
-                const model = env.GROQ_MODEL || 'openai/gpt-oss-20b'
-                const url = 'https://api.groq.com/openai/v1/chat/completions'
+                const model = env.OPENROUTER_MODEL || 'openai/gpt-oss-20b'
+                const url = 'https://openrouter.ai/api/v1/chat/completions'
 
                 const systemPrompt = `You are a review-writing assistant.
 
@@ -57,7 +57,7 @@ Specifics: ${customText || 'None provided'}
 Service: ${service}
 Recommend: ${recommend}`
 
-                console.log('[Review API] Calling Groq')
+                console.log('[Review API] Calling OpenRouter')
                 const apiRes = await fetch(url, {
                   method: 'POST',
                   headers: { 
@@ -75,18 +75,18 @@ Recommend: ${recommend}`
                   })
                 })
                 
-                console.log(`[Review API] Groq status: ${apiRes.status}`)
+                console.log(`[Review API] OpenRouter status: ${apiRes.status}`)
 
                 if (!apiRes.ok) {
                   const errText = await apiRes.text()
-                  console.error('Groq API Error:', errText)
+                  console.error('OpenRouter API Error:', errText)
                   res.statusCode = 502
                   res.end(JSON.stringify({ error: 'Failed to generate review' }))
                   return
                 }
 
                 const data = (await apiRes.json()) as any
-                console.log('[Review API] Raw Groq response:', JSON.stringify(data, null, 2))
+                console.log('[Review API] Raw OpenRouter response:', JSON.stringify(data, null, 2))
                 const reviewText = data.choices?.[0]?.message?.content || ''
 
                 res.setHeader('Content-Type', 'application/json')
